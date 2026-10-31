@@ -287,7 +287,7 @@ the server name.
 
 ### Protocol versions
 
-By default `MCPClient` opens every connection with the `initialize` handshake, which every MCP server accepts. The connection then has a session: the server can keep per-session state and send elicitation requests mid-call. With `protocol="auto"` (mcp 2.x SDK, HTTP or stdio) the client asks the server with `server/discover` first and uses the 2026-07-28 protocol revision when the server offers it, or falls back to the handshake:
+By default `MCPClient` opens connections with the legacy `initialize` handshake. Servers that implement only MCP `2026-07-28` need not accept that handshake because this revision removed protocol-level initialization and sessions. For an HTTP or stdio client using the mcp 2.x SDK, `protocol="auto"` calls `server/discover` first and uses `2026-07-28` when offered, falling back to `initialize` for older servers. A server that supports legacy sessions can retain per-session state and send elicitation requests mid-call:
 
 ```python
 async with MCPClient(url=url, protocol="auto", elicitation_callback=answer) as client:
